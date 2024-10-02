@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Terminal</title>
+  <link rel="stylesheet" href="https://unpkg.com/xterm/css/xterm.css" />
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #terminal-container {
+      margin: 1em;
+      height: 80%;
+      width: 100%;
+    }
+    #connect-form {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="connect-form">
+    <input type="text" id="host" placeholder="Host" />
+    <input type="text" id="port" placeholder="Porta" />
+    <input type="text" id="username" placeholder="Nome Utente" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="connect-btn">Connetti</button>
+  </div>
+  <div id="terminal-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://unpkg.com/xterm/lib/xterm.js"></script>
+  <script>
+    const socket = io();
+
+    document.getElementById('connect-btn').addEventListener('click', () => {
+      const host = document.getElementById('host').value;
+      const port = document.getElementById('port').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      socket.emit('startTerminal', { host, port, username, password });
+
+      // Inizializza xterm.js
+      const term = new Terminal();
+      term.open(document.getElementById('terminal-container'));
+
+      term.onData((data) => {
+        socket.emit('input', data);
+      });
+
+      socket.on('output', (data) => {
+        term.write(data);
+      });
+    });
+  </script>
+</body>
+</html>
