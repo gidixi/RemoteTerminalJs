@@ -26,7 +26,7 @@ Questo progetto è una semplice applicazione web che permette agli utenti di con
 
 1. **Clona il Repository**:
    ```bash
-   git clone https://github.com/tuo-username/nome-repo.git
+   git clone https://github.com/gidixi/RemoteTerminalJs.git
    cd nome-repo
    ```
 
